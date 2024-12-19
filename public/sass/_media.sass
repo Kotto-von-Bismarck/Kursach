@@ -1,0 +1,336 @@
+@media (max-width: 1200px)
+    .container
+        max-width: 760px
+    .header
+        &__logo
+            width: 200px
+        &__phone
+            font-size: 16px
+        &__contacts
+            width: 200px
+    .pluses
+        min-height: 473px
+        padding: 68px 0 30px 0
+        &__header
+            color: #0D0D0D
+            text-align: center
+            font-size: 30px
+            font-style: normal
+            font-weight: 700
+            line-height: 30px
+        &__subheader
+            margin: 30px 0 20px 0
+            color: #0D0D0D
+            text-align: center
+            font-size: 18px
+            font-style: normal
+            font-weight: 700
+            line-height: normal
+        &__icons
+            margin-top: 65px
+            width: 100%
+            display: flex
+            justify-content: center
+            flex-wrap: wrap 
+            
+        &__icon
+            width: 250px
+            text-align: center
+            color: #000
+            text-align: center
+            font-size: 14px
+            font-weight: 500
+            line-height: 14px
+            margin: 30px
+            img
+                display: block
+                margin: 0 auto
+        &__descr
+            margin-bottom: 20px
+    .consultations
+        &__header
+            font-size: 28px
+    .reviews
+        min-height: 895px
+        padding: 68px 0
+        .reviews-wrapper
+            height: 1030px
+            &__img
+                margin-right: 20px
+    .footer
+        &__info
+            width: 400px
+            height: 210px
+            background: rgba(162, 0, 0, 0.5)
+            backdrop-filter: blur(5px)
+            border: 1px solid $third-color
+            border-top: none
+            border-bottom-right-radius: 5px
+            border-bottom-left-radius: 5px
+            padding: 25px 60px 60px 60px
+        &__addr
+            color: #FFF
+            text-align: center
+            font-size: 18px
+            font-style: normal
+            font-weight: 500
+            line-height: 20px
+            margin-bottom: 30px
+        &__phone
+            color: #FFF
+            text-align: center
+            font-size: 18px
+            font-style: normal
+            font-weight: 700
+            line-height: 10px
+            text-decoration: none
+            display: block
+            margin: 0 auto
+            margin-bottom: 30px
+        &__social
+            display: flex
+            justify-content: space-between
+            width: 212px
+            margin: 0 auto
+        &__social-item
+            width: 50px
+            height: 49px
+            flex-shrink: 0
+@media (max-width: 991px)
+    
+@media (max-width: 767px)
+    .header
+        &__logo
+            width: 200px
+            margin-right: 20px
+        &__oficial
+            display: none
+        &__phone
+            font-size: 16px
+        &__contacts
+            width: 160px
+    .promo
+        &__wrapper 
+            display: flex
+            flex-direction: column
+            align-items: flex-end
+            margin-top: 90px
+        &__header
+            color: #FFF
+            text-align: right
+            font-size: 42px
+            font-style: normal
+            font-weight: 700
+            line-height: 42px
+            text-transform: uppercase
+        &__subheader
+            margin-top: 12px
+            color: #FFF
+            text-align: right
+            font-size: 24px
+            font-style: normal
+            font-weight: 500
+            line-height: 24px
+            text-transform: uppercase
+        &__icons
+            padding-left: 100px
+            width: 100%
+    .catalog
+        &__tab
+            width: 170px
+            font-size: 14px
+        &__content
+            margin-top: 60px
+            display: none
+            justify-content: center
+            flex-wrap: wrap
+            &_active
+                display: flex
+        .catolog-item
+            width: 100%
+    .reviews
+        min-height: 895px
+        padding: 68px 0
+        .reviews-wrapper
+            height: 1400px
+            margin-top: 50px
+            display: flex
+            flex-direction: column
+            justify-content: space-between
+            &__img
+                margin-right: 0
+                margin-bottom: 20px
+            &__item
+                display: flex
+                flex-direction: column
+                justify-content: space-between
+                align-items: center
+            &__text
+                width: 100%
+            &__img
+                width: 100px
+                height: 100px
+            &__title
+                text-align: center
+            &__subtitle
+                text-align: center
+            &__descr
+                text-align: justify
+
+    .footer
+        &__info
+            width: 300px
+            height: 185px
+        &__social
+            transform: translateX(-9%)
+        &__phone
+            display: none
+@media (max-width: 575px)
+    .header
+        flex-direction: row
+        button
+            width: 85%
+        &__logo
+            width: 60%
+            margin-right: 0
+        &__phone
+            font-size: 13px
+    .promo
+        background: url(../img/mob_bg.png) center center/cover no-repeat
+        height: 100vh
+        &__wrapper 
+            margin-top: 76px
+        &__header
+            color: #FFF
+            text-align: right
+            font-size: 34px
+            font-style: normal
+            font-weight: 700
+            line-height: 36px
+            text-transform: uppercase
+        &__subheader
+            margin-top: 12px
+            color: #FFF
+            text-align: right
+            font-size: 20px
+            font-style: normal
+            font-weight: 500
+            line-height: 21px
+            text-transform: uppercase
+        &__icons
+            padding-left: 0
+            width: 100%
+        &__icon
+            margin: 0 14px
+            width: 100px
+            text-align: center
+            color: #FFF
+            text-align: center
+            font-size: 12px
+            font-weight: 500
+            line-height: 14px
+            img
+                display: block
+                margin: 0 auto
+                margin-bottom: 20px
+        button
+            width: 85%
+    .pluses
+        padding: 58px 0
+        &__header
+            color: #0D0D0D
+            text-align: center
+            font-size: 22px
+            font-style: normal
+            font-weight: 700
+            line-height: 20px
+    .consultations
+        padding: 50px 0 52px 0
+        background: url(../img/mob_bg2.png) center center/cover no-repeat
+        &__header
+            color: #fff
+            font-size: 22px
+            line-height: 30px
+            font-style: normal
+            font-weight: 700
+            text-transform: uppercase
+        &__descr
+            color: #FFF
+            font-size: 16px
+            font-style: normal
+            font-weight: 400
+            line-height: 20px
+            margin-top: 30px
+        .feed-form
+            width: 100%
+            input
+                width: 100%
+    .catalog
+        padding-bottom: 30px
+        &__header
+            color: #0D0D0D
+            text-align: center
+            font-size: 22px
+            font-style: normal
+            font-weight: 700
+            line-height: 30px
+            text-transform: uppercase
+            text-align: center
+        &__tabs
+            flex-direction: column
+            justify-content: center
+            align-items: center
+        &__tab
+            width: 95%
+            font-size: 16px
+            margin-bottom: 20px
+            transform: skewX(0deg)
+            cursor: pointer
+            transition: 0.5s all
+            &:hover
+                box-shadow: 3px 3px 20px $main-color
+                border: none
+            div
+                transform: skewX(00deg)
+        .catolog-item
+            &__content
+                margin-right: 0px
+                &_active
+                    margin-right: 0px
+    .reviews
+        min-height: 895px
+        padding: 68px 0
+        &__header
+            font-size: 22px
+        .reviews-wrapper
+            height: 1800px
+    .modal
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        width: 90%
+        min-height: 402px
+        flex-shrink: 0
+        background: #F2F2F2
+        padding: 20px 30px 
+        &__close
+            font-size: 40px
+            line-height: 40px
+            flex-shrink: 0
+            position: absolute
+            right: 0px
+            top: -40px
+            color: $main-color
+            cursor: pointer
+        .feed-form
+            width: 100%
+            input
+                width: 100%
+        label.error
+            border: none
+            text-align: center
+            color: #646464
+            font-weight: 600
+            font-size: 12px
+            margin-bottom: 15px

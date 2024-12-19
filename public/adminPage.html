@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_package_v0.16/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_package_v0.16/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_package_v0.16/favicon-16x16.png">
+    <link rel="manifest" href="favicon_package_v0.16/site.webmanifest">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.min.css">
+</head>
+<body>
+    <div class="adminContainer">
+        <section class="customers">
+            <div class="table__header">
+                <h2 class="table__title">
+                    Таблица клиентов
+                </h2>
+            </div>
+            <table class="table__body">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Телефон</th>
+                        <th scope="col">Элктронный почтовый ящик</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="TDid" scope="row">1</td>
+                        <td class="TDname">Коноводов Никита Сергеевич</td>
+                        <td>89122378207</td>
+                        <td>example123@mail.ru</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">2</td>
+                        <td class="TDname">Ермолин Дмитрий Александрович</td>
+                        <td>88005553535</td>
+                        <td>example123@mail.ru</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">3</td>
+                        <td class="TDname">Калиберда Кирилл Павлович</td>
+                        <td>89878586565</td>
+                        <td>example123@mail.ru</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">4</td>
+                        <td class="TDname">Мифтахов Ильмир Шамильевич</td>
+                        <td>89195436265</td>
+                        <td>example123@mail.ru</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                      <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+        <br>
+        <section class="orders">
+            <div class="table__header">
+                <h2 class="table__title">
+                    Таблица заказов
+                </h2>
+            </div>
+            <table class="table__body">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Клиент</th>
+                        <th scope="col">Товар(ы)</th>
+                        <th scope="col">Дата оформления</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="TDid" scope="row">1</td>
+                        <td class="TDname">Коноводов Никита Сергеевич</td>
+                        <td>something</td>
+                        <td>11.12.2024</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">2</td>
+                        <td class="TDname">Ермолин Дмитрий Александрович</td>
+                        <td>something</td>
+                        <td>15.12.2024</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">3</td>
+                        <td class="TDname">Калиберда Кирилл Павлович</td>
+                        <td>something</td>
+                        <td>10.12.2024</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">4</td>
+                        <td class="TDname">Мифтахов Ильмир Шамильевич</td>
+                        <td>something</td>
+                        <td>13.12.2024</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                      <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+        <br>
+        <section class="orders">
+            <div class="table__header">
+                <h2 class="table__title">
+                    Таблица товаров
+                </h2>
+            </div>
+            <table class="table__body">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Категория</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="TDid" scope="row">1</td>
+                        <td>для бега на месте ID 1</td>
+                        <td>товар</td>
+                        <td>1 000 000 $</td>
+                        <td>товар хороший, небитый, некрашенный</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">2</td>
+                        <td>для марафона ID 3</td>
+                        <td>товар</td>
+                        <td>1 000 000 $</td>
+                        <td>товар хороший, небитый, некрашенный</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">3</td>
+                        <td>для триатлона ID 2</td>
+                        <td>товар</td>
+                        <td>1 000 000 $</td>
+                        <td>товар хороший, небитый, некрашенный</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="TDid" scope="row">4</td>
+                        <td>для бега на месте ID 1</td>
+                        <td>товар</td>
+                        <td>1 000 000 $</td>
+                        <td>товар хороший, небитый, некрашенный</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                      <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </section>
+    
+        <section class="incomingMessage">
+            <div class="table__header">
+                <h2 class="table__title">
+                    Новые заказы и заявки на консультацию
+                </h2>
+            </div>
+            <table class="table__body">
+                <thead>
+                    <tr>
+                        <th scope="col">ID заявки</th>
+                        <th scope="col">ФИО</th>
+                        <th scope="col">Телефон</th>
+                        <th scope="col">Элктронный почтовый ящик</th>
+                        <th scope="col">ID товара</th>
+                        <th scope="col">ID категории</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="TDid" scope="row">1</td>
+                        <td class="TDname">Коробейников Владислав Сергеевич</td>
+                        <td>89125826467</td>
+                        <td>example123@mail.ru</td>
+                        <td class="TDid">3</td>
+                        <td class="TDid">2</td>
+                        <td class="TDbtn">
+                            <button class="button btnGreen"><span>изменить запись</span></button>
+                        </td><td class="TDbtn">
+                            <button class="button"><span>удалить запись</span></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>             

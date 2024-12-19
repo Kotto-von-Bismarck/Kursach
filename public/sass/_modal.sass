@@ -1,0 +1,58 @@
+.overlay
+    position: fixed
+    width: 100%
+    background: rgb(0, 0, 0, 0.5)
+    top: 0
+    left: 0
+    height: 100%
+    z-index: 3
+    display: none
+.modal
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    width: 382px
+    min-height: 402px
+    flex-shrink: 0
+    background: #F2F2F2
+    padding: 38px 40px 40px 40px
+    &__close
+        font-size: 40px
+        line-height: 40px
+        flex-shrink: 0
+        position: absolute
+        right: -40px
+        top: 0
+        color: $main-color
+        cursor: pointer
+    &__subtitle
+        color: #0D0D0D
+        text-align: center
+        font-size: 17px
+        font-style: normal
+        font-weight: 700
+        line-height: 19px
+    &__descr
+        color: #0D0D0D
+        margin-top: 10px
+        text-align: center
+        font-size: 13px
+        font-style: normal
+        font-weight: 700
+        line-height: 14px
+    &_mini
+        min-height: 140px
+    .error
+        border: 1px solid $second-color
+
+    label.error
+        border: none
+        text-align: center
+        color: #646464
+        font-weight: 600
+        font-size: 14px
+        margin-bottom: 20px
+
+#order, #consultation, #thanks
+    display: none

@@ -1,0 +1,152 @@
+.button
+    margin-top: 4px
+    width: 150px
+    height: 30px
+    border-radius: 5px
+    background: $main-color
+    border: none
+    color: #FFF
+    text-align: center
+    font-size: 12px
+    font-style: normal
+    font-weight: 400
+    line-height: normal
+    text-transform: uppercase
+    position: relative
+    display: flex
+    padding: 0
+    justify-content: center
+    align-items: center
+    &::after
+        content: ''
+        display: flex
+        position: absolute
+        width: 0%
+        border-radius: 4px
+        height: 30px
+        background: $second-color
+        transition: 0.5s all
+    &:hover
+        &::after
+            width: 100%
+    &:active
+        &::before
+            content: ''
+            display: flex
+            position: absolute
+            width: 100%
+            height: 30px
+            background: $third-color
+            border-radius: 4px
+            z-index: 2
+    &_main
+        width: 300px
+        height: 50px
+        flex-shrink: 0
+        font-size: 16px
+        margin-top: 67px
+        position: relative
+        display: flex
+        padding: 0
+        justify-content: center
+        align-items: center
+        &::after
+            content: ''
+            display: flex
+            position: absolute
+            width: 0%
+            border-radius: 4px
+            height: 50px
+            background: $second-color
+            transition: 0.5s all
+        &:hover
+            &::after
+                width: 100%
+        &:active
+            &::before
+                content: ''
+                display: flex
+                position: absolute
+                width: 100%
+                height: 50px
+                background: $third-color
+                border-radius: 4px
+                z-index: 2
+    &_submit
+        width: 100%
+        height: 55px
+        color: #FFF
+        font-size: 16px
+        position: relative
+        display: flex
+        padding: 0
+        margin: 0 auto
+        justify-content: center
+        align-items: center
+        &::after
+            content: ''
+            display: flex
+            position: absolute
+            width: 0%
+            border-radius: 4px
+            height: 55px
+            background: $second-color
+            transition: 0.5s all
+        &:hover
+            &::after
+                width: 100%
+        &:active
+            &::before
+                content: ''
+                display: flex
+                position: absolute
+                width: 100%
+                height: 55px
+                background: $third-color
+                border-radius: 4px
+                z-index: 2
+    &_mini
+        width: 135px
+        height: 44px
+        position: relative
+        display: flex
+        padding: 0
+        justify-content: center
+        align-items: center
+        &::after
+            content: ''
+            display: flex
+            position: absolute
+            width: 0%
+            border-radius: 4px
+            height: 44px
+            background: $second-color
+            transition: 0.5s all
+        &:hover
+            &::after
+                width: 100%
+        &:active
+            &::before
+                content: ''
+                display: flex
+                position: absolute
+                width: 100%
+                height: 44px
+                background: $third-color
+                border-radius: 4px
+                z-index: 2
+    span
+        z-index: 3
+
+.btnGreen 
+    background: #378141
+    &::after
+        content: ''
+        background: #206629
+    &:active
+        &::before
+            content: ''
+            background: #114618
+
+.btnW90
+    width: 100%
