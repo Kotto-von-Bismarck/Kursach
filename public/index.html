@@ -19,7 +19,7 @@
     <section id="up" class="promo">
         <div class="container">
             <header class="header">
-                <a href="adminPage.html" class="header__logo">
+                <a href="/adminPage" class="header__logo">
                     <img src="img/logo.svg" alt="logo">
                 </a>
                 <div class="header__oficial">
@@ -83,19 +83,20 @@
             </div>
         </div>
     </section>
-    <section class="consultations">
+    <section class="consultations" id="conSULtat">
         <div class="container">
             <h2 class="consultations__header">
                 Получите бесплатную консультацию<br> по подбору пульсометра 
             </h2>
-            <div class="consultations__descr">
+            <h3 class="consultations__descr">
                 Просто заполните форму заявки <br>и мы перезвоним вам в течении 10 минут
-            </div>
+            </h3>
             <form class="feed-form" name="requestForConsultation">
                 <input name="name" required placeholder="Ваше имя" type="text">
                 <input name="phone" required placeholder="Ваш телефон" type="number">
                 <input name="email" required placeholder="Ваш E-mail" type="email">
-                <button class="button button_submit"><span>заказать кОНСУЛЬТАЦИЮ</span></button>
+                
+                <button type="submit" id="consultationSubmit" class="button button_submit"><span>ЗАКАЗАТЬ КОНСУЛЬТАЦИЮ</span></button>
             </form>
         </div>
     </section>
@@ -601,10 +602,10 @@
             <div class="modal__descr">
                 и мы перезвоним вам в течении 10 минут
             </div>
-            <form class="feed-form feed-form_mt25" action="#">
-                <input name="name" placeholder="Ваше имя" type="text">
-                <input name="phone" placeholder="Ваш телефон" type="number">
-                <input name="email" placeholder="Ваш E-mail" type="email">
+            <form class="feed-form feed-form_mt25" name="requestForCall" action="#">
+                <input required name="name" placeholder="Ваше имя" type="text">
+                <input required name="phone" placeholder="Ваш телефон" type="number">
+                <input required name="email" placeholder="Ваш E-mail" type="email">
                 <button class="button button_submit"><span>заказать кОНСУЛЬТАЦИЮ</span></button>
             </form>
         </div>
@@ -616,13 +617,14 @@
             <div class="modal__descr">
                 Пульсометр Polar FT1
             </div>
-            <form class="feed-form feed-form_mt25" action="#">
+            <form class="feed-form feed-form_mt25" name="order" action="#">
                 <input name="name" required placeholder="Ваше имя" type="text">
                 <input name="phone" required placeholder="Ваш телефон" type="number">
                 <input name="email" required placeholder="Ваш E-mail" type="email">
                 <button class="button button_submit"><span>Купить</span></button>
             </form>
         </div>
+
         <div class="modal modal_mini" id="thanks">
             <div class="modal__close">&times;</div>
             <div class="modal__subtitle">
@@ -630,6 +632,16 @@
             </div>
             <div class="modal__descr">
                 Наш менеджер свяжется с вами в ближайшее время!
+            </div>
+        </div>
+
+        <div class="modal modal_mini" id="modalError">
+            <div class="modal__close">&times;</div>
+            <div class="modal__subtitle">
+                Ошибка!
+            </div>
+            <div class="modal__descr">
+                Что-то пошло не так!
             </div>
         </div>
     </div>

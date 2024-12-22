@@ -1,13 +1,17 @@
 import express from "express";
 import cors from "cors";
-
-const app = express()
-
-app.use(express.static('public'))
-app.use(cors())
-app.use(express.json())
-
 import { Sequelize, DataTypes } from "sequelize";
+import bodyParser from "body-parser";
+
+// const bodyParser = require('body-parser');
+const app = express();
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(cors());
+app.use(express.json());
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -25,10 +29,10 @@ const Message = sequelize.define(
     'Message',
     {
         requestID: { 
-            type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
-            primaryKey: true 
+            primaryKey: true,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4
         },
         name: {
             type: DataTypes.STRING,
@@ -44,11 +48,11 @@ const Message = sequelize.define(
         },
         productID: {
             type: DataTypes.STRING,
-            defaultValue: 'request for consultation',
+            defaultValue: 'заявка на бесплатную консультацию',
         },
         categoryID: {
             type: DataTypes.STRING ||  DataTypes.INTEGER,
-            defaultValue: 'request for consultation',
+            defaultValue: 'заявка на бесплатную консультацию',
         },
     },
     {
@@ -61,14 +65,35 @@ app.post('/api/consultationData', (req, res) => {
 
     let data = { echo: consultationData };
     
-    console.log(data.echo.email);
+    for (let field in data.echo) {
+        if ( data.echo[field] === '' ) {
+            data.echo[field] = null;
+        }
+    }
     
     res.send(data);
 
-    Message.create({ email: data.echo.email, name: data.echo.name, phoneNum: data.echo.phoneNum});
+    try {
+        Message.create({ email: data.echo.email, name: data.echo.name, phoneNum: data.echo.phoneNum});
+    } catch (e) {
+        console.log(`error: ${e}`);
+        data.echo = e;
+    }
+
+    
+    console.log(data.echo);
 });
 
 sequelize.sync()
+
+// маршруты
+
+// app.get('/add-product', async (req, res) => {
+//     const categories = await Category.findAll();
+//     const suppliers = await Supplier.findAll();
+//     res.render('add-product', { categories, suppliers });
+//   });
+
 
 app.listen(3000, () => {
     console.log('Сервер запущен')
