@@ -253,7 +253,37 @@
 </section>
 </div>
 <script src="admin.js"></script>
+
+<script>
+    function deleteComponent () {
+        let id = event.target.parentElement.parentElement.firstElementChild.innerHTML,
+        strokeID = event.target.parentElement.parentElement,
+        target = event.target;
+
+        fetch('/api/deleteConsultationData', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({id})
+        }).then(() => {
+            strokeID.classList.add("slowFADEOUT");
+            target.firstElementChild.innerHTML = 'удалено'
+        })
+    }
+</script>
 </body>
 <style>
+    span {
+        pointer-events: none;
+    }
+    .slowFADEOUT {
+        opacity: 0.5;
+        pointer-events: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 </style>
 </html>             

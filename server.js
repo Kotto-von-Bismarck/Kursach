@@ -88,7 +88,10 @@ app.get('/api/consultationData', (req, res) => {
     .catch(e => console.log(`error: ${e}`));
 });
 
-
+app.post('/api/deleteConsultationData', async (req, res) => {
+    await Message.destroy({ where: { requestID: req.body.id } });
+    res.send(req.body.id);
+});
 
 sequelize.sync()
 app.listen(3000, () => {

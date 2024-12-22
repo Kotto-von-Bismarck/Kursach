@@ -3,24 +3,24 @@ window.addEventListener('DOMContentLoaded', () => {
     // общая функция запроса данных
 
     const constructComponent = function(url, constructorName) {
-            const getData = async (url) => {
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: {'Content-type': 'application/json'}
-                })
-                if(!res.ok) {
-                    alert('не удалось загрузить контент');
-                }
-                return await res.json();
-            };
-    
-            getData(url).then(data => {
-                console.log(data);
-                
-                data.forEach((dataObj) => {
-                    new constructorName (dataObj).render();
-                });
+        const getData = async (url) => {
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {'Content-type': 'application/json'}
+            })
+            if(!res.ok) {
+                alert('не удалось загрузить контент');
+            }
+            return await res.json();
+        };
+
+        getData(url).then(data => {
+            console.log(data);
+            
+            data.forEach((dataObj) => {
+                new constructorName (dataObj).render();
             });
+        });
     }
 
     // шаблонизация данных о заказе
@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         render() {
             const element = document.createElement('tr');
-            element.style.border='121px solid #000';
+            element.classList.add('parentSTR')
 
             element.innerHTML = `
                 <td class="TDid" scope="row">${this.reqID}</td>
@@ -47,12 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="TDid">${this.productID}</td>
                 <td class="TDid">${this.categoryID}</td>
                 <td class="TDbtn">
-                    <button class="button btnGreen">
-                        <span>изменить запись</span>
-                    </button>
-                </td>
-                <td class="TDbtn">
-                    <button class="button">
+                    <button class="button DELETE" onclick="deleteComponent()">
                         <span>удалить запись</span>
                     </button>
                 </td>
@@ -62,15 +57,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     constructComponent('/api/consultationData', RequestForConsultation);
-
-    // cinemaNow
-
-    // new RequestForConsultation(
-    //     'images/filmPosters/escape.png',
-    //     'escape-from-pretoria.html',
-    //     '6.7',
-    //     'Побег из Претории',
-    //     'Триллер',
-    //     '.cinemaNow .movieCards',
-    // ).render();
 })
+
+// const btnDELETE = document.querySelectorAll('.DELETE');
+
+const consultationRequestStr = document.querySelector('.tableDinamicBody');
+
+consultationRequestStr.addEventListener('click', (event) => {
+    if (event.target && event.target.className == 'DELETE') {
+        console.log(event.target);
+    }
+})
+
+
+// btn.addEventListener('click', (e) => {
+//     // if (btn === e.target) {
+//         // console.log(btn.parentElement.parentElement.firstChild.innerHTML);
+//         console.log('btn');
+//     // }
+// })
