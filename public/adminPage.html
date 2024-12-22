@@ -246,43 +246,14 @@
                 <th scope="col">ID категории</th>
             </tr>
         </thead>
-        <tbody>
-            <% products.forEach(product => { %>
-            <tr>
-                <td class="TDid" scope="row"><%= product.name %></td>
-                <td class="TDname"><%= product.price.toFixed(2) %></td>
-                <td><%= product.Category.name %></td>
-                <td><%= product.Category.name %></td>
-                <td class="TDid"><%= product.Supplier.name %></td>
-                <td class="TDid"><%= product.Supplier.name %></td>
-                <td class="TDbtn">
-                    <form action="/delete-product/<%= product.id %>" method="POST" style="display:inline;">
-                        <button class="button" type="submit">
-                            <span>удалить запись</span>
-                        </button>
-                    </form>
-                    <button  class="button btnGreen" onclick="location.href='/edit-product/<%= product.id %>'">
-                        <span>изменить запись</span>
-                    </button>
-                </td>
-            </tr>
-            <% }) %>
-            <!-- <tr> -->
-                <!-- <td class="TDid" scope="row">1</td>
-                <td class="TDname">Коробейников Владислав Сергеевич</td>
-                <td>89125826467</td>
-                <td>example123@mail.ru</td>
-                <td class="TDid">3</td>
-                <td class="TDid">2</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"></button>
-                </td><td class="TDbtn">
-                    <button class="button"></button>
-                </td> -->
-            <!-- </tr> -->
+        <tbody class="tableDinamicBody">
+
         </tbody>
     </table>
 </section>
 </div>
+<script src="admin.js"></script>
 </body>
+<style>
+</style>
 </html>             

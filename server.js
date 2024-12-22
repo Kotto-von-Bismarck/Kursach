@@ -1,17 +1,13 @@
 import express from "express";
 import cors from "cors";
+
+const app = express()
+
+app.use(express.static('public'))
+app.use(cors())
+app.use(express.json())
+
 import { Sequelize, DataTypes } from "sequelize";
-import bodyParser from "body-parser";
-
-// const bodyParser = require('body-parser');
-const app = express();
-
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use(cors());
-app.use(express.json());
 
 const sequelize = new Sequelize({
   dialect: "sqlite",
@@ -84,17 +80,17 @@ app.post('/api/consultationData', (req, res) => {
     console.log(data.echo);
 });
 
+app.get('/api/consultationData', (req, res) => {
+    Message.findAll({raw:true})
+    .then(messages => {
+        res.send(messages);
+    })
+    .catch(e => console.log(`error: ${e}`));
+});
+
+
+
 sequelize.sync()
-
-// маршруты
-
-// app.get('/add-product', async (req, res) => {
-//     const categories = await Category.findAll();
-//     const suppliers = await Supplier.findAll();
-//     res.render('add-product', { categories, suppliers });
-//   });
-
-
 app.listen(3000, () => {
     console.log('Сервер запущен')
 })

@@ -1,5 +1,7 @@
 window.addEventListener('DOMContentLoaded', () => {
 
+    // отправка заявки на консультацию 
+
     const consultationForm = document.forms.requestForConsultation;
 
     consultationForm.addEventListener('submit', (e) => {
