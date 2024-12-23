@@ -1,7 +1,6 @@
 window.addEventListener('DOMContentLoaded', () => {
 
     // общая функция запроса данных
-
     const constructComponent = function(url, constructorName) {
         const getData = async (url) => {
             const res = await fetch(url, {
@@ -24,7 +23,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     // шаблонизация данных о заказе
-
     class RequestForConsultation {
         constructor(data) {
             this.reqID = data.requestID;
@@ -56,23 +54,84 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    constructComponent('/api/consultationData', RequestForConsultation);
-})
+    if (document.querySelector('.adminPage')) {
+        constructComponent('/api/consultationData', RequestForConsultation);
+    }
 
-// const btnDELETE = document.querySelectorAll('.DELETE');
+    if(document.querySelector('.authBody')) {
+        let jsonWtoken = localStorage.getItem('token');
+        
+        if (jsonWtoken) {
+            fetch('/login', {
+                method: "POST",
+                body: JSON.stringify({jsonWtoken}),
+                headers: {
+                    "Content-Type": 'application/json'
+                }
+            }).then(res => {
+                return res.json()
+            }).then(res => {
+                if (res.res == 'Добро пожаловать, администратор!') {
+                    setTimeout(() => {
+                        window.location.replace("http://localhost:3000/adminPage.html")
+                    },4000)
+                }
+                setTimeout(() => {
+                    return alert(`${ res.res }`)
+                },1000)
+            })
+        }
 
-const consultationRequestStr = document.querySelector('.tableDinamicBody');
-
-consultationRequestStr.addEventListener('click', (event) => {
-    if (event.target && event.target.className == 'DELETE') {
-        console.log(event.target);
+        document.getElementById('regButton').addEventListener('click', () => {
+            let nickname = document.getElementById('nickname').value
+            let password = document.getElementById('password').value
+        
+            let body = {
+                nickname,
+                password
+            }
+        
+            fetch('/login', {
+                method: "POST",
+                body: JSON.stringify(body),
+                headers: {
+                    "Content-Type": 'application/json'
+                }
+            }).then(response => {
+                if(response.status == 404) {
+                    return alert('Пользователь не существует')
+                }
+                if(response.status == 400) {
+                    return alert('Неверный пароль')
+                }
+                return response.json()
+            }).then(json => {
+                if(json != undefined || json != null) {
+                    localStorage.setItem('token', json.token)
+                }
+                return json
+            }).then((tok) => {
+                jsonWtoken = tok.token;
+                fetch('/login', {
+                    method: "POST",
+                    body: JSON.stringify({jsonWtoken}),
+                    headers: {
+                        "Content-Type": 'application/json'
+                    }
+                }).then(res => {
+                    return res.json()
+                }).then(res => {
+                    if (res.res == 'Добро пожаловать, администратор!') {
+                        setTimeout(() => {
+                            window.location.replace("http://localhost:3000/adminPage.html")
+                        },4000)
+                    }
+                    setTimeout(() => {
+                        return alert(`${ res.res }`)
+                    },1000)
+                })
+                
+            })
+        })
     }
 })
-
-
-// btn.addEventListener('click', (e) => {
-//     // if (btn === e.target) {
-//         // console.log(btn.parentElement.parentElement.firstChild.innerHTML);
-//         console.log('btn');
-//     // }
-// })

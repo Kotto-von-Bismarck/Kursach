@@ -32,4 +32,20 @@ window.addEventListener('DOMContentLoaded', () => {
         })
         .catch(err => console.error('error', err));
     })
+
+    // переход к админке
+
+    const headerLogo = document.querySelector('.secretBTN'),
+          headerLogoBTN = document.querySelector('.secretLINK');
+
+    let num = 0;
+
+    headerLogo.addEventListener('click', () => {
+        num ++
+
+        if (num > 9) {
+            headerLogo.style.display = 'none';
+            headerLogoBTN.style.display = 'block';
+        }
+    })
 })
