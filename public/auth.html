@@ -4,12 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Войти как администратор</title>
+    <link rel="stylesheet" href="css/style.min.css">
   </head>
-  <body class="authBody">
-    <input type="text" placeholder="Никнейм" id="nickname" />
-    <input type="password" placeholder="Пароль" id="password" />
-    <button id="regButton">Войти</button>
-
+  <body class="authBody modal">
+    <form action="#" class="feed-form">
+      <h2 class="pluses__header" style="font-size: 22px; margin-bottom: 20px;">Войти как администратор</h2>
+      <input type="text" placeholder="Никнейм" id="nickname" />
+      <input type="password" placeholder="Пароль" id="password" />
+      <button style="width: 100%;" class="button" id="regButton"><span>Войти</span></button>
+    </form>
     <script src="admin.js" defer></script>
   </body>
 </html>

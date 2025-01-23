@@ -18,6 +18,22 @@
 <body class="adminPage">
 <div class="adminContainer">
 <section class="customers">
+
+    <div class="overlay">
+        <div class="modal" id="editdata">
+            <div class="modal__close">&times;</div>
+            <div class="modal__subtitle">
+                Добавить новый элемент
+            </div>
+            <form class="feed-form feed-form_mt25" name="requestForPostData" action="#">
+                <input required name="name" placeholder="ФИО клиента" type="text">
+                <input required name="phone" placeholder="Телефон клиента" type="number">
+                <input required name="email" placeholder="E-mail клиента" type="email">
+                <button class="button button_submit"><span>сохранить</span></button>
+            </form>
+        </div>
+    </div>
+
     <div class="table__header">
         <h2 class="table__title">
             Таблица клиентов
@@ -32,55 +48,12 @@
                 <th scope="col">Элктронный почтовый ящик</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td class="TDid" scope="row">1</td>
-                <td class="TDname">Коноводов Никита Сергеевич</td>
-                <td>89122378207</td>
-                <td>example123@mail.ru</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">2</td>
-                <td class="TDname">Ермолин Дмитрий Александрович</td>
-                <td>88005553535</td>
-                <td>example123@mail.ru</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">3</td>
-                <td class="TDname">Калиберда Кирилл Павлович</td>
-                <td>89878586565</td>
-                <td>example123@mail.ru</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">4</td>
-                <td class="TDname">Мифтахов Ильмир Шамильевич</td>
-                <td>89195436265</td>
-                <td>example123@mail.ru</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
+        <tbody class="CustomersTableDinamicBody">
+            
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -252,6 +225,7 @@
     </table>
 </section>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="admin.js"></script>
 
 <script>
@@ -270,6 +244,16 @@
         })
     }
 </script>
+<script>
+    
+    $('[data-modal=editdata]').on('click', function() {
+        $('.overlay, #editdata').fadeIn('slow');
+    });
+    $('.modal__close').on('click', function() {
+        $('.overlay, #consultation, #thanks, #order, #modalError').fadeOut('slow');
+    });
+    
+</script>
 </body>
 <style>
     span {
@@ -284,6 +268,16 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+    .modal {
+        border-radius: 5px;
+        width: 680px;
+    }
+    .feed-form {
+        width: 100%;
+    }
+    .feed-form input {
+        width: 100%;
     }
 </style>
 </html>             

@@ -55,6 +55,65 @@ const Message = sequelize.define(
       freezeTableName: true,
     }
 )
+const Customer = sequelize.define(
+    'Customer',
+    {
+        customerID: { 
+            allowNull: false,
+            primaryKey: true,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        phoneNum: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+    },
+    {
+      freezeTableName: true,
+    }
+)
+
+// маршрут на создание записи о клиенте
+app.post('/api/customerData', (req, res) => {
+    const {customerData} = req.body;
+
+    let data = { echo: customerData };
+    
+    for (let field in data.echo) {
+        if ( data.echo[field] === '' ) {
+            data.echo[field] = null;
+        }
+    }
+    
+    res.send(data);
+
+    try {
+        Customer.create({ email: data.echo.email, name: data.echo.name, phoneNum: data.echo.phoneNum});
+    } catch (e) {
+        console.log(`error: ${e}`);
+        data.echo = e;
+    }
+
+    console.log(data.echo);
+});
+
+// маршрут на получение всех клиентов
+app.get('/api/customerData', (req, res) => {
+    Customer.findAll({raw:true})
+    .then(сustomer => {
+        res.send(сustomer);
+    })
+    .catch(e => console.log(`error: ${e}`));
+});
 
 // маршрут на создание заявки
 app.post('/api/consultationData', (req, res) => {
@@ -76,8 +135,6 @@ app.post('/api/consultationData', (req, res) => {
         console.log(`error: ${e}`);
         data.echo = e;
     }
-
-    console.log(data.echo);
 });
 
 // маршрут на получение всех заявок
