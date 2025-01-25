@@ -32,8 +32,21 @@
                 <button class="button button_submit"><span>сохранить</span></button>
             </form>
         </div>
-    </div>
 
+        <div class="modal" id="updatedata">
+            <div class="modal__close">&times;</div>
+            <div class="modal__subtitle">
+                Изменить данные о клиенте
+            </div>
+            <form class="feed-form feed-form_mt25" name="requestForUpdateData" action="#">
+                <input required name="name" placeholder="ФИО клиента" type="text">
+                <input required name="phone" placeholder="Телефон клиента" type="number">
+                <input required name="email" placeholder="E-mail клиента" type="email">
+                <button class="button button_submit"><span>сохранить</span></button>
+            </form>
+        </div>
+    </div>
+    
     <div class="table__header">
         <h2 class="table__title">
             Таблица клиентов
@@ -53,7 +66,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingCustomerModal()"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -128,7 +141,7 @@
     </table>
 </section>
 <br>
-<section class="orders">
+<section class="products">
     <div class="table__header">
         <h2 class="table__title">
             Таблица товаров
@@ -201,7 +214,6 @@
         </tfoot>
     </table>
 </section>
-
 <section class="incomingMessage">
     <div class="table__header">
         <h2 class="table__title">
@@ -229,23 +241,12 @@
 <script src="admin.js"></script>
 
 <script>
-    function deleteComponent () {
-        let id = event.target.parentElement.parentElement.firstElementChild.innerHTML,
-        strokeID = event.target.parentElement.parentElement,
-        target = event.target;
-
-        fetch('/api/deleteConsultationData', {
-            method: 'POST',
-            headers: {'Content-type': 'application/json'},
-            body: JSON.stringify({id})
-        }).then(() => {
-            strokeID.classList.add("slowFADEOUT");
-            target.firstElementChild.innerHTML = 'удалено'
-        })
+    function openAddingCustomerModal () {
+        $('.overlay, #editdata').fadeIn('slow');
+        const modalUp = document.querySelector('.overlay #updatedata');
+        modalUp.style.cssText='display: none;';
     }
-</script>
-<script>
-    
+
     $('[data-modal=editdata]').on('click', function() {
         $('.overlay, #editdata').fadeIn('slow');
     });

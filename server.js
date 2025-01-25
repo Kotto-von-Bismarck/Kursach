@@ -82,6 +82,39 @@ const Customer = sequelize.define(
     }
 )
 
+// маршрут на обновление записи о клиенте
+app.post('/api/customerUpdateData', (req, res) => {
+
+    const {customerUpdateData} = req.body;
+
+    let data = customerUpdateData ;
+    
+    for (let field in data) {
+        if ( data[field] === '' ) {
+            data[field] = null;
+        }
+    }
+    try {
+        Customer.update(
+            {
+                email: data.email,
+                name: data.name,
+                phoneNum: data.phoneNum
+            },
+            {
+                where: {
+                    customerID: data.id
+                }
+            }
+        )
+    } catch (e) {
+        console.log(`error: ${e}`);
+        data.echo = e;
+    }
+
+    res.send(data);
+});
+
 // маршрут на создание записи о клиенте
 app.post('/api/customerData', (req, res) => {
     const {customerData} = req.body;
@@ -147,10 +180,18 @@ app.get('/api/consultationData', (req, res) => {
 });
 
 // маршрут на удаление заявки по id
-app.post('/api/deleteConsultationData', async (req, res) => {
-    await Message.destroy({ where: { requestID: req.body.id } });
-    res.send(req.body.id);
+app.post('/api/deleteData', async (req, res) => {
+    console.log(req.headers.table);
+    if (req.headers.table == 'request') {
+        await Message.destroy({ where: { requestID: req.body.id } });
+        res.send(req.body.id);
+    } else if (req.headers.table == 'customer') {
+        await Customer.destroy({ where: { customerID: req.body.id } });
+        res.send(req.body.id);
+    }
 });
+
+
 
 const Admin = sequelize.define('Admin', 
     {

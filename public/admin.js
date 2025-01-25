@@ -1,59 +1,102 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded',async () => {
 
     // общая функция запроса данных
-    const constructComponent = function(url, constructorName) {
-        if (typeof url == "string") {
-            const getData = async (url) => {
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: {'Content-type': 'application/json'}
-                })
-                if(!res.ok) {
-                    alert('не удалось загрузить контент');
-                }
-                return await res.json();
-            };
-    
-            getData(url).then(data => {
-                console.log(data);
-                
-                data.forEach((dataObj) => {
-                    new constructorName (dataObj).render();
-                });
-            });
-        } else {
-                console.log(url);
-                new constructorName(url).render();
+    async function fetchData(url) {
+        const res = await fetch(url, {
+            method: 'GET',
+            headers: {'Content-type': 'application/json'}
+        })
+        if(!res.ok) {
+            alert('не удалось загрузить контент');
         }
+        return await res.json()
+    } 
+
+    const postForm = document.forms.requestForPostData,
+          UpdateForm = document.forms.requestForUpdateData
+
+    // общая функция удаления компонента
+    async function deleteComponent (id, tName) {
+        await fetch('/api/deleteData', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'table': `${tName}`
+            },
+            body: JSON.stringify({id})
+        })
+        const data = await fetchData('/api/customerData')
+        RequestForCustomers.resetParent();
+        data.forEach(item => new RequestForCustomers(item).render())
     }
 
-    const postForm = document.forms.requestForPostData
+    // функция изменения компонента
+
+    const modalAdd = document.querySelector('.overlay #editdata');
+
+    let UpdateCustomerID = 0;
+
+    function openCustomerModal(obj) {
+        $('.overlay, #updatedata').fadeIn('slow');
+        modalAdd.style.cssText='display: none;';
+        
+        UpdateForm.elements.name.value = obj.name;
+        UpdateForm.elements.email.value = obj.email;
+        UpdateForm.elements.phone.value = obj.phone;
+        
+        UpdateCustomerID =  obj.id;
+    }
 
     // шаблонизация данных о покупателе
     class RequestForCustomers {
+        static parent = document.querySelector('.customers .CustomersTableDinamicBody')
+        
         constructor(data) {
             this.customerID = data.customerID;
             this.name = data.name;
             this.phoneNum = data.phoneNum;
             this.email = data.email;
-            this.parent = document.querySelector('.customers .CustomersTableDinamicBody');
+        }
+
+        static resetParent() {
+            RequestForCustomers.parent.innerHTML = '';
+        }
+
+        createActionBtn(type, fn) {
+            const field = document.createElement('td');
+            field.classList.add('TDbtn');
+            const btn = document.createElement('button');
+            btn.classList.add('button');
+            if (type === 'edit') {
+                btn.setAttribute('data-edit', 'customer');
+                btn.classList.add('btnGreen');
+                btn.innerHTML = `<span>изменить запись</span>`;
+            } else {
+                btn.setAttribute('data-del', 'customer');
+                btn.innerHTML = `<span>удалить запись</span>`;
+            }
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fn({id: this.customerID,
+                    name: this.name, 
+                    phone: this.phoneNum, 
+                    email: this.email});
+            })
+            field.appendChild(btn);
+            return field;
         }
         render() {
             const element = document.createElement('tr');
             element.classList.add('parentSTR')
-
             element.innerHTML = `
-                <td class="TDid" scope="row">${this.customerID}</td>
-                <td class="TDname">${this.name}</td>
-                <td>${this.phoneNum}</td>
-                <td>${this.email}</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
+            <td class="TDid" scope="row">${this.customerID}</td>
+            <td class="TDname">${this.name}</td>
+            <td>${this.phoneNum}</td>
+            <td>${this.email}</td>
             `;
-            this.parent.append(element);
+            element.appendChild(this.createActionBtn('edit', obj => openCustomerModal(obj)))
+            element.appendChild(this.createActionBtn('create', obj => deleteComponent(obj.id, 'customer')))
+            RequestForCustomers.parent.append(element);
         }
     }
 
@@ -80,7 +123,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <td class="TDid">${this.productID}</td>
                 <td class="TDid">${this.categoryID}</td>
                 <td class="TDbtn">
-                    <button class="button DELETE" onclick="deleteComponent()">
+                    <button data-del="request" class="button DELETE" onclick="deleteComponent()">
                         <span>удалить запись</span>
                     </button>
                 </td>
@@ -90,10 +133,15 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     if (document.querySelector('.adminPage')) {
-        constructComponent('/api/consultationData', RequestForConsultation);
-        constructComponent('/api/customerData', RequestForCustomers);
+        const consultationData = await fetchData('/api/consultationData');
+        const customerData = await fetchData('/api/customerData');
+        consultationData.forEach((dataObj) => {
+            new RequestForConsultation(dataObj).render();
+        })
+        customerData.forEach((dataObj) => {
+            new RequestForCustomers(dataObj).render();
+        })
     }
-
 
     if(document.querySelector('.authBody')) {
         let jsonWtoken = localStorage.getItem('token');
@@ -172,7 +220,7 @@ window.addEventListener('DOMContentLoaded', () => {
         })
     }
 
-    // функция отправки данных клиенте
+    // функция отправки данных клиента
     postForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
@@ -192,16 +240,54 @@ window.addEventListener('DOMContentLoaded', () => {
             body: JSON.stringify({customerData})
         })
         .then(res => res.json())
-        .then(data => {
-            // console.log(data.echo);
-            
+        .then(async data => {
             postForm.reset()
             $('#editdata').fadeOut("fast")
             $('.overlay').fadeOut('fast');
+            
+            const res = await fetchData('/api/customerData');
+            RequestForCustomers.resetParent()
+            res.forEach(item => new RequestForCustomers(item).render())
+        })
+        .catch(err => console.error('error', err));
+    })
 
-            if (document.querySelector('.adminPage')) {
-                constructComponent(data.echo, RequestForCustomers);
-            }
+    // функция отправки данных существующего клиента
+    UpdateForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = UpdateForm.elements.name.value, 
+              email = UpdateForm.elements.email.value, 
+              phone = UpdateForm.elements.phone.value;
+
+        let customerUpdateData = {
+            id: UpdateCustomerID,
+            name: name, 
+            phoneNum: phone, 
+            email: email 
+        }
+    
+        fetch('/api/customerUpdateData', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({customerUpdateData})
+        })
+        .then(res => res.json())
+
+        .then(async data => {
+            UpdateForm.reset()
+            $('#updatedata').fadeOut("fast")
+            $('.overlay').fadeOut('fast');
+
+            console.log(data);
+            
+            
+            const res = await fetchData('/api/customerData');
+            console.log(res);
+            
+
+            RequestForCustomers.resetParent()
+            res.forEach(item => new RequestForCustomers(item).render())
         })
         .catch(err => console.error('error', err));
     })
