@@ -81,13 +81,35 @@ const Customer = sequelize.define(
       freezeTableName: true,
     }
 )
+const Order = sequelize.define(
+    'Order',
+    {
+        orderID: { 
+            allowNull: false,
+            primaryKey: true,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        productArr: {
+            allowNull: false,
+            type: DataTypes.STRING,
+        }
+    },
+    {
+      freezeTableName: true,
+    }
+)
 
 // маршрут на обновление записи о клиенте
 app.post('/api/customerUpdateData', (req, res) => {
 
     const {customerUpdateData} = req.body;
 
-    let data = customerUpdateData ;
+    let data = customerUpdateData;
     
     for (let field in data) {
         if ( data[field] === '' ) {
@@ -115,28 +137,32 @@ app.post('/api/customerUpdateData', (req, res) => {
     res.send(data);
 });
 
-// маршрут на создание записи о клиенте
-app.post('/api/customerData', (req, res) => {
-    const {customerData} = req.body;
+// маршрут на создание записи 
+app.post('/api/postData', (req, res) => {
+    const {itemData} = req.body;
 
-    let data = { echo: customerData };
+    let data = itemData;
     
-    for (let field in data.echo) {
-        if ( data.echo[field] === '' ) {
-            data.echo[field] = null;
+    for (let field in data) {
+        if ( data[field] === '' ) {
+            data[field] = null;
         }
     }
     
     res.send(data);
 
-    try {
-        Customer.create({ email: data.echo.email, name: data.echo.name, phoneNum: data.echo.phoneNum});
-    } catch (e) {
-        console.log(`error: ${e}`);
-        data.echo = e;
+    if (itemData.tName == 'customer') {
+        Customer.create({ 
+            email: data.email, 
+            name: data.name, 
+            phoneNum: data.phoneNum
+        });
+    } else if (itemData.tName == 'order') {
+        Order.create({ 
+            name: data.name, 
+            productArr: `${data.products}`
+        });
     }
-
-    console.log(data.echo);
 });
 
 // маршрут на получение всех клиентов
@@ -144,6 +170,15 @@ app.get('/api/customerData', (req, res) => {
     Customer.findAll({raw:true})
     .then(сustomer => {
         res.send(сustomer);
+    })
+    .catch(e => console.log(`error: ${e}`));
+});
+
+// маршрут на получение всех заказов
+app.get('/api/orderData', (req, res) => {
+    Order.findAll({raw:true})
+    .then(order => {
+        res.send(order);
     })
     .catch(e => console.log(`error: ${e}`));
 });
@@ -247,6 +282,6 @@ app.listen(3000, () => {
 
 // Admin.create( { nickname: 'Dmitry_admin123', password: 'Ya@Dmin' } )
 
-// await Admin.destroy({
+// await Order.destroy({
 //     truncate: true,
 //   })

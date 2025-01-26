@@ -25,9 +25,17 @@ window.addEventListener('DOMContentLoaded',async () => {
             },
             body: JSON.stringify({id})
         })
-        const data = await fetchData('/api/customerData')
-        RequestForCustomers.resetParent();
-        data.forEach(item => new RequestForCustomers(item).render())
+        if (tName == 'customer') {
+            const data = await fetchData('/api/customerData')
+            RequestForCustomers.resetParent();
+            data.forEach(item => new RequestForCustomers(item).render())
+        } else if (tName == 'request') {
+            console.log('request');
+            
+            const data = await fetchData('/api/consultationData')
+            RequestForConsultation.resetParent();
+            data.forEach(item => new RequestForConsultation(item).render())
+        }
     }
 
     // функция изменения компонента
@@ -57,11 +65,9 @@ window.addEventListener('DOMContentLoaded',async () => {
             this.phoneNum = data.phoneNum;
             this.email = data.email;
         }
-
         static resetParent() {
             RequestForCustomers.parent.innerHTML = '';
         }
-
         createActionBtn(type, fn) {
             const field = document.createElement('td');
             field.classList.add('TDbtn');
@@ -102,6 +108,8 @@ window.addEventListener('DOMContentLoaded',async () => {
 
     // шаблонизация данных о заказе
     class RequestForConsultation {
+        static parent = document.querySelector('.incomingMessage .tableDinamicBody')
+        
         constructor(data) {
             this.reqID = data.requestID;
             this.name = data.name;
@@ -110,6 +118,23 @@ window.addEventListener('DOMContentLoaded',async () => {
             this.productID = data.productID;
             this.categoryID = data.categoryID;
             this.parent = document.querySelector('.incomingMessage .tableDinamicBody');
+        }
+        static resetParent() {
+            RequestForConsultation.parent.innerHTML = '';
+        }
+        createActionBtn(fn) {
+            const field = document.createElement('td');
+            field.classList.add('TDbtn');
+            const btn = document.createElement('button');
+            btn.classList.add('button');
+            btn.setAttribute('data-del', 'request');
+            btn.innerHTML = `<span>удалить запись</span>`;
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fn(this.reqID);
+            })
+            field.appendChild(btn);
+            return field;
         }
         render() {
             const element = document.createElement('tr');
@@ -122,13 +147,9 @@ window.addEventListener('DOMContentLoaded',async () => {
                 <td>${this.email}</td>
                 <td class="TDid">${this.productID}</td>
                 <td class="TDid">${this.categoryID}</td>
-                <td class="TDbtn">
-                    <button data-del="request" class="button DELETE" onclick="deleteComponent()">
-                        <span>удалить запись</span>
-                    </button>
-                </td>
             `;
-            this.parent.append(element);
+            element.appendChild(this.createActionBtn(id => deleteComponent(id, 'request')))
+            RequestForConsultation.parent.append(element);
         }
     }
 
@@ -220,36 +241,67 @@ window.addEventListener('DOMContentLoaded',async () => {
         })
     }
 
-    // функция отправки данных клиента
+    // функция отправки данных
     postForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        
-        const name = postForm.elements.name.value, 
-              email = postForm.elements.email.value, 
-              phone = postForm.elements.phone.value;
 
-        let customerData = {
-            name: name, 
-            phoneNum: phone, 
-            email: email 
+        function fetchFormData(itemData) {
+            fetch('/api/postData', {
+                method: 'POST',
+                headers: {'Content-type': 'application/json'},
+                body: JSON.stringify({itemData})
+            })
+            .then(res => res.json())
+            .then(async data => {
+                postForm.reset()
+                $('#editdata').fadeOut("fast")
+                $('.overlay').fadeOut('fast');
+                
+                // const res = await fetchData('/api/customerData');
+                // RequestForCustomers.resetParent()
+                // res.forEach(item => new RequestForCustomers(item).render())
+                
+                const res = await fetchData('/api/orderData');
+                RequestForCustomers.resetParent()
+                res.forEach(item => new RequestForCustomers(item).render())
+
+                res.forEach(item => console.log(item.createdAt));
+                
+            })
+            .catch(err => console.error('error', err));
         }
-    
-        fetch('/api/customerData', {
-            method: 'POST',
-            headers: {'Content-type': 'application/json'},
-            body: JSON.stringify({customerData})
-        })
-        .then(res => res.json())
-        .then(async data => {
-            postForm.reset()
-            $('#editdata').fadeOut("fast")
-            $('.overlay').fadeOut('fast');
+
+        let itemData;
+
+        if (postForm.elements.customerSub) {
+            const name = postForm.elements.name.value, 
+                  email = postForm.elements.email.value, 
+                  phone = postForm.elements.phone.value;
+
+            itemData = {
+                tName: 'customer',
+                name: name, 
+                phoneNum: phone, 
+                email: email 
+            }
+
+            fetchFormData(itemData)
+        } else if (postForm.elements.orderSub) {
+            const name = postForm.elements.name.value,
+                  products = postForm.elements.products.value;
+
+            const prodArr = products.replaceAll(" ", "").split(',');
+
+            itemData = {
+                tName: 'order',
+                name: name, 
+                products: prodArr 
+            }
+
+            console.log(itemData);
             
-            const res = await fetchData('/api/customerData');
-            RequestForCustomers.resetParent()
-            res.forEach(item => new RequestForCustomers(item).render())
-        })
-        .catch(err => console.error('error', err));
+            fetchFormData(itemData)
+        }
     })
 
     // функция отправки данных существующего клиента
@@ -280,7 +332,6 @@ window.addEventListener('DOMContentLoaded',async () => {
             $('.overlay').fadeOut('fast');
 
             console.log(data);
-            
             
             const res = await fetchData('/api/customerData');
             console.log(res);

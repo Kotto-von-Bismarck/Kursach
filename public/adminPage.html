@@ -17,36 +17,31 @@
 </head>
 <body class="adminPage">
 <div class="adminContainer">
-<section class="customers">
-
-    <div class="overlay">
-        <div class="modal" id="editdata">
-            <div class="modal__close">&times;</div>
-            <div class="modal__subtitle">
-                Добавить новый элемент
-            </div>
-            <form class="feed-form feed-form_mt25" name="requestForPostData" action="#">
-                <input required name="name" placeholder="ФИО клиента" type="text">
-                <input required name="phone" placeholder="Телефон клиента" type="number">
-                <input required name="email" placeholder="E-mail клиента" type="email">
-                <button class="button button_submit"><span>сохранить</span></button>
-            </form>
+<div class="overlay">
+    <div class="modal" id="editdata">
+        <div class="modal__close">&times;</div>
+        <div class="modal__subtitle">
+            Добавить новый элемент
         </div>
-
-        <div class="modal" id="updatedata">
-            <div class="modal__close">&times;</div>
-            <div class="modal__subtitle">
-                Изменить данные о клиенте
-            </div>
-            <form class="feed-form feed-form_mt25" name="requestForUpdateData" action="#">
-                <input required name="name" placeholder="ФИО клиента" type="text">
-                <input required name="phone" placeholder="Телефон клиента" type="number">
-                <input required name="email" placeholder="E-mail клиента" type="email">
-                <button class="button button_submit"><span>сохранить</span></button>
-            </form>
-        </div>
+        <form class="feed-form feed-form_mt25" name="requestForPostData" action="#">
+            
+        </form>
     </div>
-    
+
+    <div class="modal" id="updatedata">
+        <div class="modal__close">&times;</div>
+        <div class="modal__subtitle">
+            Изменить данные о клиенте
+        </div>
+        <form class="feed-form feed-form_mt25" name="requestForUpdateData" action="#">
+            <input required name="name" placeholder="ФИО клиента" type="text">
+            <input required name="phone" placeholder="Телефон клиента" type="number">
+            <input required name="email" placeholder="E-mail клиента" type="email">
+            <button class="button button_submit"><span>сохранить</span></button>
+        </form>
+    </div>
+</div>
+<section class="customers">    
     <div class="table__header">
         <h2 class="table__title">
             Таблица клиентов
@@ -66,7 +61,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingCustomerModal()"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingModal('customer')"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -87,55 +82,12 @@
                 <th scope="col">Дата оформления</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td class="TDid" scope="row">1</td>
-                <td class="TDname">Коноводов Никита Сергеевич</td>
-                <td>something</td>
-                <td>11.12.2024</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">2</td>
-                <td class="TDname">Ермолин Дмитрий Александрович</td>
-                <td>something</td>
-                <td>15.12.2024</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">3</td>
-                <td class="TDname">Калиберда Кирилл Павлович</td>
-                <td>something</td>
-                <td>10.12.2024</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">4</td>
-                <td class="TDname">Мифтахов Ильмир Шамильевич</td>
-                <td>something</td>
-                <td>13.12.2024</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
+        <tbody class="CustomersTableDinamicBody">
+            
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingModal('order')"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -241,10 +193,27 @@
 <script src="admin.js"></script>
 
 <script>
-    function openAddingCustomerModal () {
+    function openAddingModal(tName) {
         $('.overlay, #editdata').fadeIn('slow');
         const modalUp = document.querySelector('.overlay #updatedata');
         modalUp.style.cssText='display: none;';
+
+        const Parent = document.forms.requestForPostData;
+        
+        if (tName == 'customer') {
+            Parent.innerHTML = `
+            <input required name="name" placeholder="ФИО клиента" type="text">
+            <input required name="phone" placeholder="Телефон клиента" type="number">
+            <input required name="email" placeholder="E-mail клиента" type="email">
+            <button name="customerSub" class="button button_submit"><span>сохранить</span></button>
+            `;
+        } else if (tName == 'order') {
+            Parent.innerHTML = `
+            <input required name="name" placeholder="Клиент" type="text">
+            <textarea required name="products" placeholder="Товар(ы)" type="text"></textarea>
+            <button name="orderSub" class="button button_submit"><span>сохранить</span></button>
+            `;
+        }
     }
 
     $('[data-modal=editdata]').on('click', function() {
@@ -279,6 +248,10 @@
     }
     .feed-form input {
         width: 100%;
+    }
+    textarea {
+        padding: 20px;
+        height: 380px;
     }
 </style>
 </html>             
