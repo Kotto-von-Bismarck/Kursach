@@ -104,19 +104,19 @@ const Order = sequelize.define(
     }
 )
 
-// маршрут на обновление записи о клиенте
-app.post('/api/customerUpdateData', (req, res) => {
+// маршрут на обновление записи
+app.post('/api/itemUpdateData', (req, res) => {
 
-    const {customerUpdateData} = req.body;
+    const {itemUpdateData} = req.body;
 
-    let data = customerUpdateData;
+    let data = itemUpdateData;
     
     for (let field in data) {
         if ( data[field] === '' ) {
             data[field] = null;
         }
     }
-    try {
+    if (data.tName == 'customer') {
         Customer.update(
             {
                 email: data.email,
@@ -129,9 +129,18 @@ app.post('/api/customerUpdateData', (req, res) => {
                 }
             }
         )
-    } catch (e) {
-        console.log(`error: ${e}`);
-        data.echo = e;
+    } else if (data.tName == 'order') {
+        Order.update(
+            {
+                name: data.name,
+                productArr: data.products
+            },
+            {
+                where: {
+                    orderID: data.id
+                }
+            }
+        )
     }
 
     res.send(data);
@@ -148,8 +157,6 @@ app.post('/api/postData', (req, res) => {
             data[field] = null;
         }
     }
-    
-    res.send(data);
 
     if (itemData.tName == 'customer') {
         Customer.create({ 
@@ -163,6 +170,10 @@ app.post('/api/postData', (req, res) => {
             productArr: `${data.products}`
         });
     }
+
+    res.send(data);
+    console.log(data);
+    
 });
 
 // маршрут на получение всех клиентов
@@ -179,6 +190,15 @@ app.get('/api/orderData', (req, res) => {
     Order.findAll({raw:true})
     .then(order => {
         res.send(order);
+    })
+    .catch(e => console.log(`error: ${e}`));
+});
+
+// маршрут на получение всех заявок
+app.get('/api/consultationData', (req, res) => {
+    Message.findAll({raw:true})
+    .then(messages => {
+        res.send(messages);
     })
     .catch(e => console.log(`error: ${e}`));
 });
@@ -205,16 +225,7 @@ app.post('/api/consultationData', (req, res) => {
     }
 });
 
-// маршрут на получение всех заявок
-app.get('/api/consultationData', (req, res) => {
-    Message.findAll({raw:true})
-    .then(messages => {
-        res.send(messages);
-    })
-    .catch(e => console.log(`error: ${e}`));
-});
-
-// маршрут на удаление заявки по id
+// маршрут на удаление элемента по id
 app.post('/api/deleteData', async (req, res) => {
     console.log(req.headers.table);
     if (req.headers.table == 'request') {
@@ -222,6 +233,9 @@ app.post('/api/deleteData', async (req, res) => {
         res.send(req.body.id);
     } else if (req.headers.table == 'customer') {
         await Customer.destroy({ where: { customerID: req.body.id } });
+        res.send(req.body.id);
+    } else if (req.headers.table == 'order') {
+        await Order.destroy({ where: { orderID: req.body.id } });
         res.send(req.body.id);
     }
 });
@@ -270,7 +284,7 @@ app.post('/login', async (request, response) => {
             return response.sendStatus(400)
         }
 
-        let token = jwt.sign( { nickname: nickname }, "2315", { expiresIn: "1m" } )
+        let token = jwt.sign( { nickname: nickname }, "2315", { expiresIn: "10m" } )
         response.send( { token } )
     }
 })

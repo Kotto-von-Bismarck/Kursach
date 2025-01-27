@@ -31,13 +31,10 @@
     <div class="modal" id="updatedata">
         <div class="modal__close">&times;</div>
         <div class="modal__subtitle">
-            Изменить данные о клиенте
+            Изменить данные
         </div>
         <form class="feed-form feed-form_mt25" name="requestForUpdateData" action="#">
-            <input required name="name" placeholder="ФИО клиента" type="text">
-            <input required name="phone" placeholder="Телефон клиента" type="number">
-            <input required name="email" placeholder="E-mail клиента" type="email">
-            <button class="button button_submit"><span>сохранить</span></button>
+            
         </form>
     </div>
 </div>
@@ -61,7 +58,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingModal('customer')"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" id="addCustomerBTN" class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -82,12 +79,12 @@
                 <th scope="col">Дата оформления</th>
             </tr>
         </thead>
-        <tbody class="CustomersTableDinamicBody">
+        <tbody class="OrdersTableDinamicBody">
             
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" class="button btnW90 btnGreen" onclick="openAddingModal('order')"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button data-modal="editdata" id="addOrderBTN" class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -191,39 +188,6 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="admin.js"></script>
-
-<script>
-    function openAddingModal(tName) {
-        $('.overlay, #editdata').fadeIn('slow');
-        const modalUp = document.querySelector('.overlay #updatedata');
-        modalUp.style.cssText='display: none;';
-
-        const Parent = document.forms.requestForPostData;
-        
-        if (tName == 'customer') {
-            Parent.innerHTML = `
-            <input required name="name" placeholder="ФИО клиента" type="text">
-            <input required name="phone" placeholder="Телефон клиента" type="number">
-            <input required name="email" placeholder="E-mail клиента" type="email">
-            <button name="customerSub" class="button button_submit"><span>сохранить</span></button>
-            `;
-        } else if (tName == 'order') {
-            Parent.innerHTML = `
-            <input required name="name" placeholder="Клиент" type="text">
-            <textarea required name="products" placeholder="Товар(ы)" type="text"></textarea>
-            <button name="orderSub" class="button button_submit"><span>сохранить</span></button>
-            `;
-        }
-    }
-
-    $('[data-modal=editdata]').on('click', function() {
-        $('.overlay, #editdata').fadeIn('slow');
-    });
-    $('.modal__close').on('click', function() {
-        $('.overlay, #consultation, #thanks, #order, #modalError').fadeOut('slow');
-    });
-    
-</script>
 </body>
 <style>
     span {
