@@ -3,8 +3,27 @@ import cors from "cors";
 import { Sequelize, DataTypes } from "sequelize";
 import jwt from 'jsonwebtoken';
 
-const app = express()
+import http from "http";
+import path from "path";
 
+import {fileURLToPath} from 'url';
+
+import fs from "fs";
+import multer from "multer";
+
+const app = express();
+const httpServer = http.createServer(app);
+const PORT = process.env.PORT;
+
+httpServer.listen(PORT, () => {
+    console.log(`Server is listening on port ${PORT}`);
+});
+const __filename = fileURLToPath(import.meta.url),
+      __dirname = path.dirname(__filename);
+
+app.get("/", express.static(path.join(__dirname, "./public/adminPage.html")));
+
+// // //
 app.use(express.static('public'))
 app.use(cors())
 app.use(express.json())
@@ -20,7 +39,53 @@ try {
 } catch (e) {
     console.log('Невозможно выполнить подключение к БД: ', e)
 }
+// // //
 
+const handleError = (err, res) => {
+  res
+    .status(500)
+    .contentType("text/plain")
+    .end("Oops! Something went wrong!");
+};
+
+const upload = multer({
+  dest: "/public/img/catalogImg"
+});
+
+const CatalogItem = sequelize.define(
+    'CatalogItem',
+    {
+        catalogItemID: { 
+            allowNull: false,
+            primaryKey: true,
+            type: DataTypes.UUID,
+            defaultValue: Sequelize.UUIDV4
+        },
+        image: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        category: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        description: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+    },
+    {
+      freezeTableName: true,
+    }
+)
 const Message = sequelize.define(
     'Message',
     {
@@ -104,6 +169,53 @@ const Order = sequelize.define(
     }
 )
 
+// маршрут на добавление товара в каталог
+app.post(
+    "/upload",  
+    upload.single("file"),
+     (req, res) => {
+      console.log(req.body.title);
+      
+  
+      const tempPath = req.file.path;
+      const targetPath = path.join(__dirname, `./uploads/${req.file.originalname}`);
+  
+      console.log(req.file.originalname);
+  
+  
+      if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+        fs.rename(tempPath, targetPath, err => {
+            if (err) {
+                console.log(err);
+                return handleError(err, res);
+            }
+  
+            CatalogItem.create({ 
+                image: req.file.originalname, 
+                title: req.body.title, 
+                category: req.body.category,
+                price: req.body.price,
+                description: req.body.desc
+            });
+  
+            res
+              .status(200)
+              .contentType("text/plain")
+              .end(`Успешно добавлен товар : ${req.body.title}`);
+        });
+      } else {
+        fs.unlink(tempPath, err => {
+          if (err) return handleError(err, res);
+  
+          res
+            .status(403)
+            .contentType("text/plain")
+            .end("Only .png files are allowed!");
+        });
+      }
+    }
+  );
+
 // маршрут на обновление записи
 app.post('/api/itemUpdateData', (req, res) => {
 
@@ -169,11 +281,11 @@ app.post('/api/postData', (req, res) => {
             name: data.name, 
             productArr: `${data.products}`
         });
+    } else if (itemData.tName == 'products') {
+        console.log(data);
     }
 
     res.send(data);
-    console.log(data);
-    
 });
 
 // маршрут на получение всех клиентов
@@ -240,8 +352,6 @@ app.post('/api/deleteData', async (req, res) => {
     }
 });
 
-
-
 const Admin = sequelize.define('Admin', 
     {
         nickname: {
@@ -267,8 +377,6 @@ app.post('/login', async (request, response) => {
             } else if (decoded) {
                 response.send( {res: 'Добро пожаловать, администратор!'} )
             }
-
-            console.log(request.body.jsonWtoken);
             
         })
         
@@ -284,7 +392,7 @@ app.post('/login', async (request, response) => {
             return response.sendStatus(400)
         }
 
-        let token = jwt.sign( { nickname: nickname }, "2315", { expiresIn: "10m" } )
+        let token = jwt.sign( { nickname: nickname }, "2315", { expiresIn: "30m" } )
         response.send( { token } )
     }
 })

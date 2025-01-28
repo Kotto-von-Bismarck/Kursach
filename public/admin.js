@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded',async () => {
         } 
 
         const postForm = document.forms.requestForPostData,
-            UpdateForm = document.forms.requestForUpdateData
+              UpdateForm = document.forms.requestForUpdateData;
 
         // общая функция удаления компонента
         async function deleteComponent (id, tName) {
@@ -66,16 +66,25 @@ window.addEventListener('DOMContentLoaded',async () => {
 
         // функция открытия окна добавления компонента
         const addOrderBTN = document.querySelector('#addOrderBTN'),
-            addCustomerBTN = document.querySelector('#addCustomerBTN');
+              addCustomerBTN = document.querySelector('#addCustomerBTN'),
+              addProductBTN = document.querySelector('#addProductBTN');
         
         function openAddingModal(tName) {
             $('.overlay, #editdata').fadeIn('slow');
             const modalUp = document.querySelector('.overlay #updatedata');
             modalUp.style.cssText='display: none;';
 
-            const Parent = document.forms.requestForPostData;
+            const Parent = document.forms.requestForPostData,
+                  addModalWin = document.querySelector('#editdata'),
+                  newFormElem = addModalWin.lastElementChild;
             
             if (tName == 'customer') {
+
+                if (newFormElem.classList.contains('activeModalIMG')) {
+                    addModalWin.lastElementChild.innerHTML = '';
+                    newFormElem.classList.remove('activeModalIMG');
+                }
+
                 Parent.innerHTML = `
                 <input required name="name" placeholder="ФИО клиента" type="text">
                 <input required name="phone" placeholder="Телефон клиента" type="number">
@@ -83,11 +92,52 @@ window.addEventListener('DOMContentLoaded',async () => {
                 <button name="customerSub" class="button button_submit"><span>сохранить</span></button>
                 `;
             } else if (tName == 'order') {
+
+                if (newFormElem.classList.contains('activeModalIMG')) {
+                    addModalWin.lastElementChild.innerHTML = '';
+                    newFormElem.classList.remove('activeModalIMG');
+                }
+
                 Parent.innerHTML = `
                 <input required name="name" placeholder="Клиент (ФИО)" type="text">
                 <textarea required name="products" placeholder="Товар(ы) через запятую" type="text"></textarea>
                 <button name="orderSub" class="button button_submit"><span>сохранить</span></button>
                 `;
+            } else if (tName == 'product') {
+
+                Parent.innerHTML = '';
+
+                if (newFormElem.tagName == 'DIV') {
+
+                    newFormElem.classList.add('activeModalIMG')
+
+                    newFormElem.innerHTML = `
+                        <form style="margin-top: 0px;" class="feed-form" name="requestForPostCatalogItem" method="post" enctype="multipart/form-data" action="/upload">
+                            <div class="input-file-row">
+                                <label class="input-file">
+                                    <input type="file" name="file">
+                                    <span>Выберите фото товара</span>
+                                </label>
+                                <div class="input-file-list"></div>
+                            </div>
+
+                            <label class="modalLabel" for="category">Выберите категорию товара:</label>
+                            <select name="category">
+                                <option value="fitness">Для фитнеса</option>
+                                <option value="triathlon">Для триатлона</option>
+                                <option value="running">Для бега</option>
+                            </select>
+                            <input required name="title" placeholder="Наименование товара (заголовок)" type="text">
+                            
+                            <input required name="price" placeholder="Цена" type="number">
+                            <textarea required name="desc" placeholder="Описание товара" type="text"></textarea>
+
+                            <input class="submitCatItData" name="productSub" type="submit" value="Submit">
+                        </form>
+                    `;
+
+                    addModalWin.append(newFormElem);
+                }
             }
         }
         $('[data-modal=editdata]').on('click', function() {
@@ -98,6 +148,39 @@ window.addEventListener('DOMContentLoaded',async () => {
         });
         addOrderBTN.addEventListener('click', () => {openAddingModal('order')});
         addCustomerBTN.addEventListener('click', () => {openAddingModal('customer')});
+
+        let uploadImageForm;
+        addProductBTN.addEventListener('click', () => {
+            openAddingModal('product');
+            if (document.querySelector('.input-file input[type=file]')) {
+                let dt = new DataTransfer();
+                $('.input-file input[type=file]').on('change', function () {
+                    uploadImageForm = document.forms.requestForPostCatalogItem;
+
+                    let $files_list = $(this).closest('.input-file').next();
+                    $files_list.empty();
+                
+                    for ( let i = 0; i < this.files.length; i++ ){
+                        let file = this.files.item(i);
+                        dt.items.add(file);    
+                
+                        let reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = function(){
+                            let new_file_input = `
+                            <div class="input-file-list-item">
+                                <img max-width='100px' class="input-file-list-img" src="${reader.result}">
+                                <span class="input-file-list-name">${file.name}</span>
+                            </div>`;
+                            $files_list.append(new_file_input); 
+                        }
+                    };
+                    this.files = dt.files;
+                });
+            }
+        });
+
+        
 
         // функция открытия окна изменения компонента
         const modalAdd = document.querySelector('.overlay #editdata');
@@ -136,6 +219,57 @@ window.addEventListener('DOMContentLoaded',async () => {
                 itemParentTable = 'order';
             }
         }
+
+        // шаблонизация данных о товаре
+        // class RequestForProducts {
+        //     static parent = document.querySelector('.products .ProductsTableDinamicBody')
+            
+        //     constructor(data) {
+        //         this.orderID = data.orderID;
+        //         this.name = data.name;
+        //         this.products = data.productArr;
+        //         this.orderDate = data.createdAt;
+        //     }
+        //     static resetParent() {
+        //         RequestForProducts.parent.innerHTML = '';
+        //     }
+        //     createActionBtn(type, fn) {
+        //         const field = document.createElement('td');
+        //         field.classList.add('TDbtn');
+        //         const btn = document.createElement('button');
+        //         btn.classList.add('button');
+        //         if (type === 'edit') {
+        //             btn.setAttribute('data-edit', 'customer');
+        //             btn.classList.add('btnGreen');
+        //             btn.innerHTML = `<span>изменить запись</span>`;
+        //         } else {
+        //             btn.setAttribute('data-del', 'customer');
+        //             btn.innerHTML = `<span>удалить запись</span>`;
+        //         }
+        //         btn.addEventListener('click', (e) => {
+        //             e.preventDefault();
+        //             fn({id: this.orderID,
+        //                 name: this.name, 
+        //                 products: this.products, 
+        //                 date: this.orderDate});
+        //         })
+        //         field.appendChild(btn);
+        //         return field;
+        //     }
+        //     render() {
+        //         const element = document.createElement('tr');
+        //         element.classList.add('parentSTR')
+        //         element.innerHTML = `
+        //         <td class="TDid" scope="row">${this.orderID.slice(0,18)}...</td>
+        //         <td class="TDname">${this.name}</td>
+        //         <td>${this.products.replaceAll(",", ", ")}</td>
+        //         <td>${this.orderDate}</td>
+        //         `;
+        //         element.appendChild(this.createActionBtn('edit', obj => openModal(obj, 'order')))
+        //         element.appendChild(this.createActionBtn('create', obj => deleteComponent(obj.id, 'order')))
+        //         RequestForProducts.parent.append(element);
+        //     }
+        // }
 
         // шаблонизация данных о заказе
         class RequestForOrders {
@@ -177,7 +311,7 @@ window.addEventListener('DOMContentLoaded',async () => {
                 const element = document.createElement('tr');
                 element.classList.add('parentSTR')
                 element.innerHTML = `
-                <td class="TDid" scope="row">${this.orderID}</td>
+                <td class="TDid" scope="row">${this.orderID.slice(0,18)}...</td>
                 <td class="TDname">${this.name}</td>
                 <td>${this.products.replaceAll(",", ", ")}</td>
                 <td>${this.orderDate}</td>
@@ -228,7 +362,7 @@ window.addEventListener('DOMContentLoaded',async () => {
                 const element = document.createElement('tr');
                 element.classList.add('parentSTR')
                 element.innerHTML = `
-                <td class="TDid" scope="row">${this.customerID}</td>
+                <td class="TDid" scope="row">${this.customerID.slice(0,18)}...</td>
                 <td class="TDname">${this.name}</td>
                 <td>${this.phoneNum}</td>
                 <td>${this.email}</td>
@@ -274,7 +408,7 @@ window.addEventListener('DOMContentLoaded',async () => {
                 element.classList.add('parentSTR')
 
                 element.innerHTML = `
-                    <td class="TDid" scope="row">${this.reqID}</td>
+                    <td class="TDid" scope="row">${this.reqID.slice(0,18)}...</td>
                     <td class="TDname">${this.name}</td>
                     <td>${this.phoneNum}</td>
                     <td>${this.email}</td>
@@ -287,32 +421,34 @@ window.addEventListener('DOMContentLoaded',async () => {
         }
 
         // функция отправки данных
+        function fetchFormData(itemData) {
+            fetch('/api/postData', {
+                method: 'POST',
+                headers: {'Content-type': 'application/json'},
+                body: JSON.stringify({itemData})
+            })
+            .then(res => res.json())
+            .then(async data => {
+                postForm.reset()
+                $('#editdata').fadeOut("fast")
+                $('.overlay').fadeOut('fast');
+                
+                const customerData = await fetchData('/api/customerData');
+                RequestForCustomers.resetParent()
+                customerData.forEach(item => new RequestForCustomers(item).render())
+                
+                const orderData = await fetchData('/api/orderData');
+                RequestForOrders.resetParent()
+                orderData.forEach(item => new RequestForOrders(item).render())
+                
+            })
+            .catch(err => console.error('error', err));
+        }
+
+
+
         postForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
-            function fetchFormData(itemData) {
-                fetch('/api/postData', {
-                    method: 'POST',
-                    headers: {'Content-type': 'application/json'},
-                    body: JSON.stringify({itemData})
-                })
-                .then(res => res.json())
-                .then(async data => {
-                    postForm.reset()
-                    $('#editdata').fadeOut("fast")
-                    $('.overlay').fadeOut('fast');
-                    
-                    const customerData = await fetchData('/api/customerData');
-                    RequestForCustomers.resetParent()
-                    customerData.forEach(item => new RequestForCustomers(item).render())
-                    
-                    const orderData = await fetchData('/api/orderData');
-                    RequestForOrders.resetParent()
-                    orderData.forEach(item => new RequestForOrders(item).render())
-                    
-                })
-                .catch(err => console.error('error', err));
-            }
 
             let itemData;
 
@@ -340,12 +476,35 @@ window.addEventListener('DOMContentLoaded',async () => {
                     name: name, 
                     products: prodArr 
                 }
-
-                console.log(itemData);
                 
                 fetchFormData(itemData)
-            }
+            } 
+            // else if (postForm.elements.productSub) {
+            //     const title = postForm.elements.title.value, 
+            //           category = postForm.elements.category.value, 
+            //           desc = postForm.elements.desc.value,
+            //           price = postForm.elements.price.value;
+
+            //     itemData = {
+            //         tName: 'products',
+            //         title: title, 
+            //         category: category, 
+            //         description: desc,
+            //         price: price,
+            //         image: '###'
+            //     }
+
+            //     console.log(itemData);
+
+            //     // fetchFormData(itemData)
+            // }
         })
+
+        // if (typeof uploadImageForm !== "undefined") {
+        //     // console.log(uploadImageForm);
+
+        //     localStorage.setItem('newCatalogItem', `${uploadImageForm}`)
+        // }
 
         // функция отправки новых данных существующего элемента
         UpdateForm.addEventListener('submit', (e) => {

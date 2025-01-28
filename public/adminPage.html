@@ -26,6 +26,8 @@
         <form class="feed-form feed-form_mt25" name="requestForPostData" action="#">
             
         </form>
+
+        <div></div>
     </div>
 
     <div class="modal" id="updatedata">
@@ -100,51 +102,17 @@
         <thead>
             <tr>
                 <th scope="col">ID</th>
+                <th scope="col">Изображение</th>
                 <th scope="col">Категория</th>
                 <th scope="col">Наименование</th>
                 <th scope="col">Цена</th>
                 <th scope="col">Описание</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="ProductsTableDinamicBody">
             <tr>
                 <td class="TDid" scope="row">1</td>
-                <td>для бега на месте ID 1</td>
-                <td>товар</td>
-                <td>1 000 000 $</td>
-                <td>товар хороший, небитый, некрашенный</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">2</td>
-                <td>для марафона ID 3</td>
-                <td>товар</td>
-                <td>1 000 000 $</td>
-                <td>товар хороший, небитый, некрашенный</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">3</td>
-                <td>для триатлона ID 2</td>
-                <td>товар</td>
-                <td>1 000 000 $</td>
-                <td>товар хороший, небитый, некрашенный</td>
-                <td class="TDbtn">
-                    <button class="button btnGreen"><span>изменить запись</span></button>
-                </td><td class="TDbtn">
-                    <button class="button"><span>удалить запись</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td class="TDid" scope="row">4</td>
+                <td><img width="120px" src="img/pulsometr_1.png" alt="image"></td>
                 <td>для бега на месте ID 1</td>
                 <td>товар</td>
                 <td>1 000 000 $</td>
@@ -158,7 +126,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <th class="footerTR" colspan="10" scope="row"><button class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
+                <th class="footerTR" colspan="10" scope="row"><button id="addProductBTN" class="button btnW90 btnGreen"><span>добавить запись</span></button></th>
             </tr>
         </tfoot>
     </table>
@@ -190,6 +158,10 @@
 <script src="admin.js"></script>
 </body>
 <style>
+    .modalLabel {
+        margin-bottom: 10px;
+        margin-left: 21px;
+    }
     span {
         pointer-events: none;
     }
@@ -215,7 +187,112 @@
     }
     textarea {
         padding: 20px;
-        height: 380px;
+        height: 200px;
+    }
+    .input-file-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .input-file {
+        position: relative;
+        display: inline-block;
+    }
+    .input-file span {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        outline: none;
+        text-decoration: none;
+        font-size: 14px;
+        vertical-align: middle;
+        color: rgb(255 255 255);
+        text-align: center;
+        border-radius: 4px;
+        background-color: #419152;
+        line-height: 22px;
+        height: 40px;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        border: none;
+        margin: 0;
+        transition: background-color 0.2s;
+    }
+    .input-file input[type=file] {
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
+        display: block;
+        width: 0;
+        height: 0;
+    }
+    
+    /* Focus */
+    .input-file input[type=file]:focus + span {
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+    }
+    
+    /* Hover/active */
+    .input-file:hover span {
+        background-color: #59be6e;
+    }
+    .input-file:active span {
+        background-color: #2E703A;
+    }
+    
+    /* Disabled */
+    .input-file input[type=file]:disabled + span {
+        background-color: #eee;
+    }
+    
+    /* Список c превью */
+    .input-file-list {
+        padding: 10px 0;
+    }
+    .input-file-list-item {
+        display: inline-block;
+        margin: 0 15px 15px;
+        width: 150px;
+        vertical-align: top;
+        position: relative;
+    }
+    .input-file-list-item img {
+        display: block;
+        margin: 0 auto;
+        width: 100px;
+    }
+    .input-file-list-name {
+        text-align: center;
+        display: block;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+    .input-file-list-remove {
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        top: 5px;
+        right: 5px;
+        background: #ff0202;
+        width: 16px;
+        height: 16px;
+        text-align: center;
+        line-height: 16px;
+        border-radius: 50%;
+    }
+    .submitCatItData {
+        background: #c70101 !important;
+        color: #fff !important;
+        text-align: center !important;
+        font-size: 12px !important;
+        font-style: normal !important;
+        font-weight: 400 !important;
+        line-height: normal !important;
+        text-transform: uppercase !important;
     }
 </style>
 </html>             
