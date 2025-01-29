@@ -61,6 +61,10 @@ window.addEventListener('DOMContentLoaded',async () => {
                 const data = await fetchData('/api/orderData')
                 RequestForOrders.resetParent();
                 data.forEach(item => new RequestForOrders(item).render())
+            } else if (tName == 'product') {
+                const data = await fetchData('/api/catalogItemData')
+                RequestForProducts.resetParent();
+                data.forEach(item => new RequestForProducts(item).render())
             }
         }
 
@@ -221,55 +225,75 @@ window.addEventListener('DOMContentLoaded',async () => {
         }
 
         // шаблонизация данных о товаре
-        // class RequestForProducts {
-        //     static parent = document.querySelector('.products .ProductsTableDinamicBody')
+        class RequestForProducts {
+            static parent = document.querySelector('.products .ProductsTableDinamicBody')
             
-        //     constructor(data) {
-        //         this.orderID = data.orderID;
-        //         this.name = data.name;
-        //         this.products = data.productArr;
-        //         this.orderDate = data.createdAt;
-        //     }
-        //     static resetParent() {
-        //         RequestForProducts.parent.innerHTML = '';
-        //     }
-        //     createActionBtn(type, fn) {
-        //         const field = document.createElement('td');
-        //         field.classList.add('TDbtn');
-        //         const btn = document.createElement('button');
-        //         btn.classList.add('button');
-        //         if (type === 'edit') {
-        //             btn.setAttribute('data-edit', 'customer');
-        //             btn.classList.add('btnGreen');
-        //             btn.innerHTML = `<span>изменить запись</span>`;
-        //         } else {
-        //             btn.setAttribute('data-del', 'customer');
-        //             btn.innerHTML = `<span>удалить запись</span>`;
-        //         }
-        //         btn.addEventListener('click', (e) => {
-        //             e.preventDefault();
-        //             fn({id: this.orderID,
-        //                 name: this.name, 
-        //                 products: this.products, 
-        //                 date: this.orderDate});
-        //         })
-        //         field.appendChild(btn);
-        //         return field;
-        //     }
-        //     render() {
-        //         const element = document.createElement('tr');
-        //         element.classList.add('parentSTR')
-        //         element.innerHTML = `
-        //         <td class="TDid" scope="row">${this.orderID.slice(0,18)}...</td>
-        //         <td class="TDname">${this.name}</td>
-        //         <td>${this.products.replaceAll(",", ", ")}</td>
-        //         <td>${this.orderDate}</td>
-        //         `;
-        //         element.appendChild(this.createActionBtn('edit', obj => openModal(obj, 'order')))
-        //         element.appendChild(this.createActionBtn('create', obj => deleteComponent(obj.id, 'order')))
-        //         RequestForProducts.parent.append(element);
-        //     }
-        // }
+            constructor(data) {
+                this.productID = data.catalogItemID
+                this.image = data.image;
+                this.title = data.title;
+                this.category = data.category;
+                this.price = data.price;
+                this.description = data.description;
+            }
+            static resetParent() {
+                RequestForProducts.parent.innerHTML = '';
+            }
+
+            createActionBtn(type, fn) {
+                const field = document.createElement('td');
+                field.classList.add('TDbtn');
+                const btn = document.createElement('button');
+                btn.classList.add('button');
+                if (type === 'edit') {
+                    btn.setAttribute('data-edit', 'customer');
+                    btn.classList.add('btnGreen');
+                    btn.innerHTML = `<span>изменить запись</span>`;
+                } else {
+                    btn.setAttribute('data-del', 'customer');
+                    btn.innerHTML = `<span>удалить запись</span>`;
+                }
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    fn({id: this.productID,
+                        title: this.title, 
+                        image: this.image, 
+                        category: this.category, 
+                        price: this.price,
+                        description: this.description,});
+                })
+                field.appendChild(btn);
+                return field;
+            }
+            render() {
+                let categoryRusName = '';
+
+                switch (this.category) {
+                    case 'fitness':
+                        categoryRusName = 'Для фитнеса';
+                        break;
+                    case 'triathlon':
+                        categoryRusName = 'Для триатлона';
+                        break;
+                    case 'running':
+                        categoryRusName = 'Для бега';
+                        break;
+                }
+
+                const element = document.createElement('tr');
+                element.classList.add('parentSTR')
+                element.innerHTML = `
+                <td class="TDid" scope="row">${this.productID.slice(0,18)}...</td>
+                <td class="TDItemC"><img width="120px" src="img/uploadedPrImg/${this.image}" alt="image"></td>
+                <td class="TDItemC">${categoryRusName}</td>
+                <td class="TDItemC">${this.title}</td>
+                <td class="TDItemC">${this.price}</td>
+                <td class="TDdesc">${this.description}</td>
+                `;
+                element.appendChild(this.createActionBtn('create', obj => deleteComponent(obj.id, 'product')))
+                RequestForProducts.parent.append(element);
+            }
+        }
 
         // шаблонизация данных о заказе
         class RequestForOrders {
@@ -445,8 +469,6 @@ window.addEventListener('DOMContentLoaded',async () => {
             .catch(err => console.error('error', err));
         }
 
-
-
         postForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -479,32 +501,7 @@ window.addEventListener('DOMContentLoaded',async () => {
                 
                 fetchFormData(itemData)
             } 
-            // else if (postForm.elements.productSub) {
-            //     const title = postForm.elements.title.value, 
-            //           category = postForm.elements.category.value, 
-            //           desc = postForm.elements.desc.value,
-            //           price = postForm.elements.price.value;
-
-            //     itemData = {
-            //         tName: 'products',
-            //         title: title, 
-            //         category: category, 
-            //         description: desc,
-            //         price: price,
-            //         image: '###'
-            //     }
-
-            //     console.log(itemData);
-
-            //     // fetchFormData(itemData)
-            // }
         })
-
-        // if (typeof uploadImageForm !== "undefined") {
-        //     // console.log(uploadImageForm);
-
-        //     localStorage.setItem('newCatalogItem', `${uploadImageForm}`)
-        // }
 
         // функция отправки новых данных существующего элемента
         UpdateForm.addEventListener('submit', (e) => {
@@ -564,7 +561,8 @@ window.addEventListener('DOMContentLoaded',async () => {
 
         const consultationData = await fetchData('/api/consultationData'),
               customerData = await fetchData('/api/customerData'),
-              orderData = await fetchData('/api/orderData');
+              orderData = await fetchData('/api/orderData'),
+              catalogItemData = await fetchData('/api/catalogItemData');
 
         consultationData.forEach((dataObj) => {
             new RequestForConsultation(dataObj).render();
@@ -574,6 +572,9 @@ window.addEventListener('DOMContentLoaded',async () => {
         })
         orderData.forEach((dataObj) => {
             new RequestForOrders(dataObj).render();
+        })
+        catalogItemData.forEach((dataObj) => {
+            new RequestForProducts(dataObj).render();
         })
     }
 

@@ -21,8 +21,6 @@ httpServer.listen(PORT, () => {
 const __filename = fileURLToPath(import.meta.url),
       __dirname = path.dirname(__filename);
 
-app.get("/", express.static(path.join(__dirname, "./public/adminPage.html")));
-
 // // //
 app.use(express.static('public'))
 app.use(cors())
@@ -49,7 +47,7 @@ const handleError = (err, res) => {
 };
 
 const upload = multer({
-  dest: "/public/img/catalogImg"
+  dest: "/public/img/uploadedPrImg"
 });
 
 const CatalogItem = sequelize.define(
@@ -174,47 +172,48 @@ app.post(
     "/upload",  
     upload.single("file"),
      (req, res) => {
-      console.log(req.body.title);
-      
+        const tempPath = req.file.path,
+              targetPath = path.join(__dirname, `./uploads/${req.file.originalname}`);  
   
-      const tempPath = req.file.path;
-      const targetPath = path.join(__dirname, `./uploads/${req.file.originalname}`);
-  
-      console.log(req.file.originalname);
-  
-  
-      if (path.extname(req.file.originalname).toLowerCase() === ".png") {
-        fs.rename(tempPath, targetPath, err => {
-            if (err) {
-                console.log(err);
-                return handleError(err, res);
-            }
-  
-            CatalogItem.create({ 
-                image: req.file.originalname, 
-                title: req.body.title, 
-                category: req.body.category,
-                price: req.body.price,
-                description: req.body.desc
+        if (path.extname(req.file.originalname).toLowerCase() === ".png") {
+            fs.rename(tempPath, targetPath, err => {
+                if (err) {
+                    console.log(err);
+                    return handleError(err, res);
+                }
+    
+                CatalogItem.create({ 
+                    image: req.file.originalname, 
+                    title: req.body.title, 
+                    category: req.body.category,
+                    price: req.body.price,
+                    description: req.body.desc
+                });
+
+                fs.rename(targetPath, (path.join(__dirname, `./public/img/uploadedPrImg/${req.file.originalname}`)), err => {
+                    if (err) {
+                        console.log(err);
+                        return handleError(err, res);
+                    }
+
+                    res
+                        .status(200)
+                        .contentType("text/plain")
+                        .end(`Успешно добавлен товар : ${req.body.title}`);
+                });
             });
-  
-            res
-              .status(200)
-              .contentType("text/plain")
-              .end(`Успешно добавлен товар : ${req.body.title}`);
-        });
-      } else {
-        fs.unlink(tempPath, err => {
-          if (err) return handleError(err, res);
-  
-          res
-            .status(403)
-            .contentType("text/plain")
-            .end("Only .png files are allowed!");
-        });
-      }
+        } else {
+            fs.unlink(tempPath, err => {
+                if (err) return handleError(err, res);
+        
+                res
+                    .status(403)
+                    .contentType("text/plain")
+                    .end("Only .png files are allowed!");
+            });
+        }
     }
-  );
+);
 
 // маршрут на обновление записи
 app.post('/api/itemUpdateData', (req, res) => {
@@ -288,6 +287,15 @@ app.post('/api/postData', (req, res) => {
     res.send(data);
 });
 
+// маршрут на получение всех товаров
+app.get('/api/catalogItemData', (req, res) => {
+    CatalogItem.findAll({raw:true})
+    .then(catalogItem => {
+        res.send(catalogItem);
+    })
+    .catch(e => console.log(`error: ${e}`));
+});
+
 // маршрут на получение всех клиентов
 app.get('/api/customerData', (req, res) => {
     Customer.findAll({raw:true})
@@ -348,6 +356,9 @@ app.post('/api/deleteData', async (req, res) => {
         res.send(req.body.id);
     } else if (req.headers.table == 'order') {
         await Order.destroy({ where: { orderID: req.body.id } });
+        res.send(req.body.id);
+    }else if (req.headers.table == 'product') {
+        await CatalogItem.destroy({ where: { catalogItemID: req.body.id } });
         res.send(req.body.id);
     }
 });
